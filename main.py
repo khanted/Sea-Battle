@@ -173,7 +173,7 @@ def __main__():
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x_, y_ = mouse_pos_to_coordinate(pygame.mouse.get_pos())
-                    sea.make_shot(x_, y_)
+                    sea.make_shot(x_, y_ + 1)
             for i in range(1, 10 + 1):
                 for j in range(1, 10 + 1):
                     x = j * 50
