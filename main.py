@@ -6,6 +6,7 @@ SHIP = 1
 EMPTY_CHECKED = 2
 SHIP_CHECKED = 3
 EMPTY_RESTRICTED = 4
+list2 = []
 
 H = "H"
 V = "V"
@@ -97,9 +98,13 @@ class Sea(object):
         if ship.direction == V:
             for x in range(ship.start_point_x, ship.start_point_x + ship.decks):
                 self.sea[x][ship.start_point_y] = SHIP
+                list2.append(x)
+                list2.append(ship.start_point_y)
         else:
             for y in range(ship.start_point_y, ship.start_point_y + ship.decks):
                 self.sea[ship.start_point_x][y] = SHIP
+                list2.append(ship.start_point_x)
+                list2.append(y)
 
     def set_ships(self):
         ships_set = 0
@@ -211,34 +216,34 @@ def __main__():
     w = 50
     h = 50
     color = (0, 0, 255)
-    size = 1000
+    size = 600
 
-    pygame.init()
-    screen = pygame.display.set_mode((size, size))
-    pygame.display.set_caption("Морской бой")
-    screen.fill((color))
-    running = True
-    pygame.event.get()
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        for i in range(1, 10 + 1):
-            for j in range(1, 10 + 1):
-                x = j * 50
-                y = i * 50
-                square = pygame.Rect(x, y, w, h)
-                if sea.get_cell(i - 1, j - 1) == SHIP:
-                    pygame.draw.rect(screen, (0, 10, 55), square, 1)
-                else:
-                    pygame.draw.rect(screen, (10, 10, 255), square, 1)
-                """
-                if sea.can_be_placed() == 'False':
-                    pygame.draw.rect(screen, (10, 10, 255), square, 1)
-                if sea.set_ships() == 'True':
-                    pygame.draw.rect(screen, (0, 10, 55), square, 1)"""
-        pygame.display.flip()
-    pygame.quit()
+    def draw_cell():
+        pygame.init()
+        screen = pygame.display.set_mode((size, size))
+        pygame.display.set_caption("Морской бой")
+        screen.fill((color))
+        running = True
+        pygame.event.get()
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            for i in range(1, 10 + 1):
+                for j in range(1, 10 + 1):
+                    x = j * 50
+                    y = i * 50
+                    if sea.sea[i - 1][j - 1] == 1:
+                        square = pygame.Rect(x, y, w, h)
+                        pygame.draw.rect(screen, (100, 100, 155), square, 10000000)
+                    else:
+                        square = pygame.Rect(x, y, w, h)
+                        pygame.draw.rect(screen, (0, 10, 55), square, 1)
+            pygame.display.flip()
+        pygame.quit()
+
+    draw_cell()
+
 
 
 if __name__ == "__main__":
