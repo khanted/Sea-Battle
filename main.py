@@ -107,7 +107,6 @@ class Sea(object):
                 list2.append(y)
 
     def set_ships(self):
-        ships_set = 0
         for decks in [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]:
             while True:
                 ship = Ship(randint(0, self.size - decks), randint(0, self.size - decks), choice([H, V]), decks)
@@ -118,22 +117,19 @@ class Sea(object):
     def get_cell(self, x, y):
         return self.sea[x][y]
 
-    """def make_shot(self, x, y):
-        x = int(input())
-        y = int(input())
-        if sea[x][y] == 0:
-            sea[x][y] = 3
+    def make_shot(self, x, y):
+        if self.sea[x][y] in [0, 4]:
+            self.sea[x][y] = 3
             return MISS
-        if sea[x][y] == 1:
-            sea[x][y] = 8
+        """if self.sea[x][y] == 1:
+            self.sea[x][y] = 8
             if self.ship_was_destroyed(self, x, y):
                 return HIT
             if not self.ship_was_destroyed(self, x, y):
                 return KILLED"""
 
+
     """def ship_was_destroyed(self, x, y):
-        x = int(input())
-        y = int(input())
         if sea[x + 1][y] == 1 or sea[x - 1][y] == 1 or sea[x][y + 1] == 1 or sea[x][y - 1] == 1 or sea[x + 1][
             y + 1] == 1 or sea[x + 1][y - 1] == 1 or sea[x - 1][y + 1] == 1 or sea[x - 1][y - 1] == 1:
             return False
@@ -147,72 +143,18 @@ class Sea(object):
         else:
             return False"""
 
-    """def draw_cell(x, y, w, h, color, sea):
-        x = 0
-        y = 0
-        w = 10
-        h = 10
-        sea()
-        can_be_placed()
-        set_ships()
-        color = (0, 0, 255)
-        sea = Sea()
-        pygame.init()
-        SCREEN = pygame.display.set_mode((size, size))
-        pygame.display.set_caption("Морской бой")
-        square = pygame.Rect(x, y, w, h)
-        SCREEN.fill((color))
-        running = True
-        pygame.event.get()
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            for i in range(1, 10 + 1):
-                for j in range(1, 10 + 1):
-                    square = pygame.Rect(x + j * 10, y + i * 10, w, h)
-                    if can_be_placed() == 'True':
-                        pygame.draw.rect(SCREEN, (0, 100, 255), squere, 8)
-            pygame.display.flip()
-        pygame.quit()"""
 
-    """def draw_sea(weidth, height):
-        weidth = size
-        height = size
-        draw_cell()
-        can_be_placed()
-        set_ships()
-        p = draw_cell(0, 0, 10, 10)
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            for i in range(1, 10 + 1):
-                for j in range(1, 10 + 1):
-                    square = pygame.Rect(x + j * 10, y + i * 10, w, h)
-                    if can_be_placed() == 'True':
-                        pygame.draw.rect(SCREEN, (0, 100, 255), squere, 8)
-                    if can_be_placed() == 'False':
-                        pygame.draw.rect(SCREEN, (10, 10, 255), squere, 8)
-                    if set_ships() == 'True':
-                        pygame.draw.rect(SCREEN, (0, 10, 55), squere, 8)
-            pygame.display.flip()
-        pygame.quit()"""
-
-    """def mouse_pos_to_sea_coordinate(x, y):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            x, y = mouse_pos_to_coordinate(pg.mouse.get_pos())
-            make_shot(x, y)
-            return x, y"""
-
+def mouse_pos_to_coordinate(coord):
+    y, x = coord
+    x = (x // 50) - 1
+    y = (y // 50) - 1
+    return (x, y)
 
 def __main__():
     sea = Sea()
     sea.set_ships()
     sea.draw_with_ships()
 
-    x = 0
-    y = 0
     w = 50
     h = 50
     color = (0, 0, 255)
@@ -229,13 +171,18 @@ def __main__():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x_, y_ = mouse_pos_to_coordinate(pygame.mouse.get_pos())
+                    sea.make_shot(x_, y_)
             for i in range(1, 10 + 1):
                 for j in range(1, 10 + 1):
                     x = j * 50
                     y = i * 50
                     if sea.sea[i - 1][j - 1] == 1:
                         square = pygame.Rect(x, y, w, h)
-                        pygame.draw.rect(screen, (100, 100, 155), square, 10000000)
+                        pygame.draw.rect(screen, (100, 100, 155), square)
+                    elif sea.sea[i - 1][j - 1] == 3:
+                        pygame.draw.rect(screen, (0, 0, 0), square)
                     else:
                         square = pygame.Rect(x, y, w, h)
                         pygame.draw.rect(screen, (0, 10, 55), square, 1)
